@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config Definition Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Load templates list
+        function loadTemplates() {
+            fetch('/get-templates')
+                .then(response => response.json())
+                .then(data => {
+                    const templateSelect = document.getElementById('template-select');
+                    templateSelect.innerHTML = ''; // Clear existing options
+                    data.templates.forEach(template => {
+                        const option = document.createElement('option');
+                        option.value = template.file;
+                        option.text = template.name;
+                        templateSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    alert('Error loading templates: ' + error);
+                });
+        }
+
+        // Load selected template
+        function loadTemplate(templateFile) {
+            fetch(`/load-template?file=${templateFile}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    document.querySelector('[name="file_name"]').value = data.file_name || '';
+                    document.querySelector('[name="total_columns"]').value = data.total_columns || '';
+
+                    const columnsBody = document.getElementById('columns-body');
+                    columnsBody.innerHTML = ''; // Clear existing columns
+                    data.columns.forEach(column => {
+                        addRowWithData(column); // Load column data into table
+                    });
+                })
+                .catch(error => {
+                    alert('Error loading template: ' + error);
+                });
+        }
+
+        // Generate a row based on existing column data
+        function addRowWithData(column) {
+            const tableBody = document.getElementById('columns-body');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" class="form-control" name="name" value="${column.name}" required></td>
+                <td>
+                    <select name="type" class="form-control" onchange="updateParams(this.parentNode.parentNode)" required>
+                        <option value="random_string" ${column.type === 'random_string' ? 'selected' : ''}>随机文字</option>
+                        <option value="code128_string" ${column.type === 'code128_string' ? 'selected' : ''}>Code128 字符串</option>
+                        <option value="number" ${column.type === 'number' ? 'selected' : ''}>数字</option>
+                        <option value="random_number" ${column.type === 'random_number' ? 'selected' : ''}>随机数字</option>
+                        <option value="zipcode" ${column.type === 'zipcode' ? 'selected' : ''}>郵便番号</option>
+                        <option value="address1" ${column.type === 'address1' ? 'selected' : ''}>都道府県名</option>
+                        <option value="address2" ${column.type === 'address2' ? 'selected' : ''}>市区町村名</option>
+                        <option value="address3" ${column.type === 'address3' ? 'selected' : ''}>町域名</option>
+                        <option value="full_address" ${column.type === 'full_address' ? 'selected' : ''}>完整地址</option>
+                        <option value="flag" ${column.type === 'flag' ? 'selected' : ''}>旗帜</option>
+                        <option value="date" ${column.type === 'date' ? 'selected' : ''}>日期</option>
+                    </select>
+                </td>
+                <td><input type="number" class="form-control" name="position" value="${column.position}" required></td>
+                <td class="params-container"></td>
+                <td><button type="button" class="btn btn-danger" onclick="deleteRow(this)">删除</button></td>
+            `;
+            tableBody.appendChild(newRow);
+
+            // Make sure the correct params are shown for each type
+            updateParams(newRow, column); // Generate params form based on type
+        }
+
+        // Generate the appropriate params based on the type
+        function updateParams(row, column = {}) {
+            const type = row.querySelector('[name="type"]').value;
+            const paramsContainer = row.querySelector('.params-container');
+            paramsContainer.innerHTML = ''; // Clear param inputs
+
+            if (type === 'number') {
+                paramsContainer.innerHTML += `
+                    <label>Start: <input type="number" class="form-control" name="start" value="${column.start || ''}" placeholder="起始值"></label>
+                    <label>Step: <input type="number" class="form-control" name="step" value="${column.step || ''}" placeholder="步长"></label>
+                    <label>Length: <input type="number" class="form-control" name="length" value="${column.length || ''}" placeholder="长度"></label>
+                `;
+            } else if (type === 'random_number') {
+                paramsContainer.innerHTML += `
+                    <label>Min: <input type="number" class="form-control" name="min" value="${column.min || ''}" placeholder="最小值"></label>
+                    <label>Max: <input type="number" class="form-control" name="max" value="${column.max || ''}" placeholder="最大值"></label>
+                `;
+            } else if (type === 'date') {
+                paramsContainer.innerHTML += `
+                    <label>Format: <input type="text" class="form-control" name="format" value="${column.format || 'YYYY-MM-DD'}" placeholder="日期格式"></label>
+                `;
+            } else if (type === 'zipcode' || type === 'address1' || type === 'address2' || type === 'address3' || type === 'full_address') {
+                paramsContainer.innerHTML += `
+                    <label>郵便番号列号: <input type="number" class="form-control" name="postal_code_column" value="${column.postal_code_column || ''}" placeholder="郵便番号列号"></label>
+                `;
+            } else if (type === 'flag') {
+                paramsContainer.innerHTML += `
+                    <label>Flag Type:
+                        <select name="flag_type" class="form-control">
+                            <option value="0" ${column.flag_type === '0' ? 'selected' : ''}>数字0</option>
+                            <option value="1" ${column.flag_type === '1' ? 'selected' : ''}>数字1</option>
+                            <option value="random" ${column.flag_type === 'random' ? 'selected' : ''}>随机0或1</option>
+                        </select>
+                    </label>
+                `;
+            }
+        }
+
+        // Add a new row
+        function addRow() {
+            const columnsBody = document.getElementById('columns-body');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" class="form-control" name="name" required></td>
+                <td>
+                    <select name="type" class="form-control" onchange="updateParams(this.parentNode.parentNode)" required>
+                        <option value="random_string">随机文字</option>
+                        <option value="code128_string">Code128 字符串</option>
+                        <option value="number">数字</option>
+                        <option value="random_number">随机数字</option>
+                        <option value="zipcode">郵便番号</option>
+                        <option value="address1">都道府県名</option>
+                        <option value="address2">市区町村名</option>
+                        <option value="address3">町域名</option>
+                        <option value="full_address">完整地址</option>
+                        <option value="flag">旗帜</option>
+                        <option value="date">日期</option>
+                    </select>
+                </td>
+                <td><input type="number" class="form-control" name="position" required></td>
+                <td class="params-container"></td>
+                <td><button type="button" class="btn btn-danger" onclick="deleteRow(this)">删除</button></td>
+            `;
+            columnsBody.appendChild(newRow);
+        }
+
+        // Delete a row
+        function deleteRow(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row); // Remove the row
+        }
+
+        // Validate form
+        function validateForm() {
+            const fileName = document.querySelector('[name="file_name"]').value;
+            const totalColumns = document.querySelector('[name="total_columns"]').value;
+            if (!fileName || !totalColumns) {
+                alert("文件名和总列数是必填项");
+                return false;
+            }
+            return true;
+        }
+
+        // Submit the form
+        function generate() {
+            if (!validateForm()) {
+                return;
+            }
+
+            const columns = [];
+            document.querySelectorAll('#columns-body tr').forEach(row => {
+                const column = {
+                    name: row.querySelector('[name="name"]').value,
+                    type: row.querySelector('[name="type"]').value,
+                    position: parseInt(row.querySelector('[name="position"]').value),
+                };
+
+                // Gather params based on type
+                const paramsContainer = row.querySelector('.params-container');
+                if (column.type === 'number') {
+                    column.start = paramsContainer.querySelector('[name="start"]') ? parseInt(paramsContainer.querySelector('[name="start"]').value) || 0 : 0;
+                    column.step = paramsContainer.querySelector('[name="step"]') ? parseInt(paramsContainer.querySelector('[name="step"]').value) || 1 : 1;
+                    column.length = paramsContainer.querySelector('[name="length"]') ? parseInt(paramsContainer.querySelector('[name="length"]').value) || null : null;
+                } else if (column.type === 'random_number') {
+                    column.min = paramsContainer.querySelector('[name="min"]') ? parseInt(paramsContainer.querySelector('[name="min"]').value) || 0 : 0;
+                    column.max = paramsContainer.querySelector('[name="max"]') ? parseInt(paramsContainer.querySelector('[name="max"]').value) || 100 : 100;
+                } else if (column.type === 'date') {
+                    column.format = paramsContainer.querySelector('[name="format"]').value || 'YYYY-MM-DD';
+                } else if (column.type === 'zipcode' || column.type === 'address1' || column.type === 'address2' || column.type === 'address3' || column.type === 'full_address') {
+                    column.postal_code_column = paramsContainer.querySelector('[name="postal_code_column"]').value;
+                } else if (column.type === 'flag') {
+                    column.flag_type = paramsContainer.querySelector('[name="flag_type"]').value || 'random';
+                }
+                columns.push(column);
+            });
+
+            const fileName = document.querySelector('[name="file_name"]').value;
+            const totalColumns = parseInt(document.querySelector('[name="total_columns"]').value);
+
+            fetch('/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    file_name: fileName,
+                    total_columns: totalColumns,
+                    columns: columns
+                }),
+            })
+            .then(response => {
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.indexOf('application/json') !== -1) {
+                    return response.json();
+                } else {
+                    throw new Error('服务器返回了非JSON响应');
+                }
+            })
+            .then(data => {
+                if (data.error) {
+                    alert(`错误: ${data.error}`);
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(`请求失败: ${error.message}`);
+            });
+        }
+
+        window.onload = loadTemplates;
+    </script>
+</head>
+<body class="container">
+    <h1 class="mt-5">Config 配置定义</h1>
+
+    <div class="mb-3">
+        <label for="template-select" class="form-label">选择模板:</label>
+        <select id="template-select" class="form-select" onchange="loadTemplate(this.value)">
+            <option value="">请选择一个模板</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="file_name" class="form-label">文件名:</label>
+        <input type="text" class="form-control" name="file_name" placeholder="生成文件名" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="total_columns" class="form-label">总列数:</label>
+        <input type="number" class="form-control" name="total_columns" placeholder="总列数" required>
+    </div>
+
+    <form id="config-form">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>列名</th>
+                    <th>类型</th>
+                    <th>位置</th>
+                    <th>参数</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="columns-body">
+                <!-- Rows will be dynamically added here -->
+            </tbody>
+        </table>
+        <div class="mb-3">
+            <button type="button" class="btn btn-primary" onclick="addRow()">添加列</button>
+        </div>
+        <div class="mb-3">
+            <button type="button" class="btn btn-success" onclick="generate()">生成数据</button>
+        </div>
+    </form>
+</body>
+</html>

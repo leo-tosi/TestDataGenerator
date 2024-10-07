@@ -1,0 +1,376 @@
+{
+    "template_name": "商品情報テンプレート",
+    "file_name": "product_data",
+    "total_columns": 56,
+    "columns": [
+        {
+            "name": "商品コード",
+            "type": "custom_string",
+            "position": 1,
+            "length": 200
+        },
+        {
+            "name": "商品名１",
+            "type": "custom_string",
+            "position": 2,
+            "length": 200
+        },
+        {
+            "name": "商品名２",
+            "type": "custom_string",
+            "position": 3,
+            "length": 200
+        },
+        {
+            "name": "商品名１（ふりがな）",
+            "type": "custom_string",
+            "position": 4,
+            "length": 200
+        },
+        {
+            "name": "商品名２（ふりがな）",
+            "type": "custom_string",
+            "position": 5,
+            "length": 200
+        },
+        {
+            "name": "商品カテゴリ",
+            "type": "random_number",
+            "position": 6,
+            "min": 1,
+            "max": 200
+        },
+        {
+            "name": "商品販促区分",
+            "type": "random_number",
+            "position": 7,
+            "min": 10,
+            "max": 50
+        },
+        {
+            "name": "ブランド",
+            "type": "random_number",
+            "position": 8,
+            "min": 1,
+            "max": 200
+        },
+        {
+            "name": "入荷限界設定日数",
+            "type": "random_number",
+            "position": 9,
+            "min": 1,
+            "max": 20
+        },
+        {
+            "name": "出荷限界設定日数",
+            "type": "random_number",
+            "position": 10,
+            "min": 1,
+            "max": 20
+        },
+        {
+            "name": "適正在庫未引当数",
+            "type": "random_number",
+            "position": 11,
+            "min": 1,
+            "max": 20
+        },
+        {
+            "name": "発注点未引当数",
+            "type": "random_number",
+            "position": 12,
+            "min": 1,
+            "max": 20
+        },
+        {
+            "name": "安全在庫未引当数",
+            "type": "random_number",
+            "position": 13,
+            "min": 1,
+            "max": 20
+        },
+        {
+            "name": "長期滞留設定日数",
+            "type": "random_number",
+            "position": 14,
+            "min": 1,
+            "max": 20
+        },
+        {
+            "name": "入荷加工要否区分",
+            "type": "random_number",
+            "position": 15,
+            "min": 0,
+            "max": 1
+        },
+        {
+            "name": "出荷加工要否区分",
+            "type": "random_number",
+            "position": 16,
+            "min": 0,
+            "max": 1
+        },
+        {
+            "name": "入荷画像検品要否区分",
+            "type": "random_number",
+            "position": 17,
+            "min": 0,
+            "max": 1
+        },
+        {
+            "name": "出荷画像検品要否区分",
+            "type": "random_number",
+            "position": 18,
+            "min": 0,
+            "max": 1
+        },
+        {
+            "name": "ささげ要否区分",
+            "type": "random_number",
+            "position": 19,
+            "min": 0,
+            "max": 1
+        },
+        {
+            "name": "ロット番号入力要否区分",
+            "type": "random_number",
+            "position": 20,
+            "min": 0,
+            "max": 1
+        },
+        {
+            "name": "消費期限入力要否区分",
+            "type": "random_number",
+            "position": 21,
+            "min": 0,
+            "max": 1
+        },
+        {
+            "name": "TC区分",
+            "type": "random_number",
+            "position": 22,
+            "min": 0,
+            "max": 1
+        },
+        {
+            "name": "カラー名",
+            "type": "custom_string",
+            "position": 23,
+            "length": 200
+        },
+        {
+            "name": "サイズ名",
+            "type": "custom_string",
+            "position": 24,
+            "length": 200
+        },
+        {
+            "name": "管理温度区分",
+            "type": "random_number",
+            "position": 25,
+            "min": 10,
+            "max": 50
+        },
+        {
+            "name": "メーカー品番",
+            "type": "custom_string",
+            "position": 26,
+            "length": 200
+        },
+        {
+            "name": "基本仕入単価（税別）",
+            "type": "random_number",
+            "position": 27,
+            "min": 1,
+            "max": 20
+        },
+        {
+            "name": "基本仕入単価消費税額",
+            "type": "random_number",
+            "position": 28,
+            "min": 1,
+            "max": 20
+        },
+        {
+            "name": "基本売上単価（税別）",
+            "type": "random_number",
+            "position": 29,
+            "min": 1,
+            "max": 20
+        },
+        {
+            "name": "基本売上単価消費税額",
+            "type": "random_number",
+            "position": 30,
+            "min": 1,
+            "max": 20
+        },
+        {
+            "name": "寄託単価（税別）",
+            "type": "random_number",
+            "position": 31,
+            "min": 1,
+            "max": 20
+        },
+        {
+            "name": "寄託単価消費税額",
+            "type": "random_number",
+            "position": 32,
+            "min": 1,
+            "max": 20
+        },
+        {
+            "name": "入荷加工指示内容",
+            "type": "custom_string",
+            "position": 33,
+            "length": 1000
+        },
+        {
+            "name": "出荷加工指示内容",
+            "type": "custom_string",
+            "position": 34,
+            "length": 1000
+        },
+        {
+            "name": "商品荷姿名",
+            "type": "custom_string",
+            "position": 35,
+            "length": 200
+        },
+        {
+            "name": "商品バーコード1",
+            "type": "custom_string",
+            "position": 36,
+            "length": 200
+        },
+        {
+            "name": "商品バーコード2",
+            "type": "custom_string",
+            "position": 37,
+            "length": 200
+        },
+        {
+            "name": "商品バーコード3",
+            "type": "custom_string",
+            "position": 38,
+            "length": 200
+        },
+        {
+            "name": "単位名",
+            "type": "custom_string",
+            "position": 39,
+            "length": 30
+        },
+        {
+            "name": "入数",
+            "type": "random_number",
+            "position": 40,
+            "min": 1,
+            "max": 99
+        },
+        {
+            "name": "幅（mm）",
+            "type": "random_number",
+            "position": 41,
+            "min": 1,
+            "max": 99
+        },
+        {
+            "name": "長さ（mm）",
+            "type": "random_number",
+            "position": 42,
+            "min": 1,
+            "max": 99
+        },
+        {
+            "name": "高さ（mm）",
+            "type": "random_number",
+            "position": 43,
+            "min": 1,
+            "max": 99
+        },
+        {
+            "name": "ハンガー区分",
+            "type": "random_number",
+            "position": 44,
+            "min": 0,
+            "max": 1
+        },
+        {
+            "name": "重量物区分",
+            "type": "random_number",
+            "position": 45,
+            "min": 0,
+            "max": 1
+        },
+        {
+            "name": "単体出荷区分",
+            "type": "random_number",
+            "position": 46,
+            "min": 0,
+            "max": 1
+        },
+        {
+            "name": "ホームフェイスロケーション",
+            "type": "custom_string",
+            "position": 47,
+            "length": 28
+        },
+        {
+            "name": "追加テキスト１",
+            "type": "custom_string",
+            "position": 48,
+            "length": 200
+        },
+        {
+            "name": "追加テキスト２",
+            "type": "custom_string",
+            "position": 49,
+            "length": 200
+        },
+        {
+            "name": "追加テキスト３",
+            "type": "custom_string",
+            "position": 50,
+            "length": 200
+        },
+        {
+            "name": "追加コード",
+            "type": "random_number",
+            "position": 51,
+            "min": 1,
+            "max": 9999999999
+        },
+        {
+            "name": "追加時刻",
+            "type": "custom_string",
+            "position": 52,
+            "length": 12
+        },
+        {
+            "name": "商品備考",
+            "type": "custom_string",
+            "position": 53,
+            "length": 200
+        },
+        {
+            "name": "セット品区分",
+            "type": "random_number",
+            "position": 54,
+            "min": 0,
+            "max": 1
+        },
+        {
+            "name": "ホームリザーブロケーション",
+            "type": "custom_string",
+            "position": 55,
+            "length": 28
+        },
+        {
+            "name": "カラーコード",
+            "type": "custom_string",
+            "position": 56,
+            "length": 10
+        }
+    ]
+}

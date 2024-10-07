@@ -1,0 +1,19 @@
+{
+    "template_name": "示例模板",
+    "file_name": "test_data",
+    "total_columns": 5,
+    "columns": [
+        {
+            "name": "ID",
+            "type": "number",
+            "position": 1,
+            "start": 1,
+            "step": 1
+        },
+        {
+            "name": "Name",
+            "type": "name",
+            "position": 2
+        }
+    ]
+}
